@@ -1,9 +1,11 @@
 import Button from '@/Components/Shared/Button'
 import colors from '@/data/colors'
+import { useRouter } from 'expo-router'
 import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Pressable, Text, View } from 'react-native'
 
 export default function LandingScreen() {
+    const router = useRouter();
     return (
       <View>
         <Image source={require('./../assets/images/Helena.jpeg')}
@@ -27,13 +29,17 @@ export default function LandingScreen() {
                 marginTop: 20,
                 color: colors.GRAY,
             }}>We are here to help you find events in Helena, Montana</Text>
-           <Button text='Get Started' onPress={() => alert('You Pressed get started button')}/>
+           <Button text='Get Started' 
+           onPress={() => router.push('./(auth)/Signup')}/>
+
+           <Pressable onPress={() => router.push('./(auth)/Signin')}>
             <Text style={{
                 fontSize: 17,
                 textAlign: 'center',
                 marginTop: 20,
                 color: colors.GRAY,
             }}>Already have an Account? Sign In here.</Text>
+            </Pressable>
         </View>
       </View>
     )
