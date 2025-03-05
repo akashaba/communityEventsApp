@@ -1,10 +1,14 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
 import React, { useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/data/colors';
 import TextInputField from '@/Components/Shared/TextInputField';
 import Button from '@/Components/Shared/Button';
 import * as ImagePicker from 'expo-image-picker';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/config/Firebase';
+import { upload } from 'cloudinary-react-native';
+import { cloudinary, options } from '@/config/CloudinaryConfig';
 
 export default function Signup() {
 
@@ -13,6 +17,37 @@ export default function Signup() {
   const [password, setPassword] = useState<string|undefined>();
   const [profileImage, setProfileImage] = useState<string|undefined>();
   const onButtonPress = () => {
+    if(!fullName || !email || !password){
+      ToastAndroid.show('Please fill all fields', ToastAndroid.BOTTOM);
+      return;
+    }
+
+    createUserWithEmailAndPassword(auth, email, password)
+    .then(async(userCredential) => {
+      console.log(userCredential);
+      // Upload Image
+      await upload(cloudinary,{
+        file: profileImage,
+        options: options,
+        callback: (error: any, response:any) => {
+          if(error){
+            console.log(error);
+          }else{
+            console.log(response);
+          }
+        }
+      
+      })
+
+      // Add User to Database
+      
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      ToastAndroid.show(errorMessage, ToastAndroid.BOTTOM);
+      // ..
+    });
 
   }
   const pickImage = async () => {
