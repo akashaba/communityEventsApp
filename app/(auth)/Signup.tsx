@@ -9,6 +9,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/config/Firebase';
 import { upload } from 'cloudinary-react-native';
 import { cloudinary, options } from '@/config/CloudinaryConfig';
+import axios from 'axios';
+import { router } from 'expo-router';
 
 export default function Signup() {
 
@@ -29,11 +31,19 @@ export default function Signup() {
       await upload(cloudinary,{
         file: profileImage,
         options: options,
-        callback: (error: any, response:any) => {
+        callback: async (error: any, response:any) => {
           if(error){
             console.log(error);
           }else{
-            console.log(response);
+            console.log(response?.url);
+            const result = await axios.post('http://192.168.0.104:8082/user', {
+              name:fullName,
+              email:email,
+              image: response?.url,
+            });
+            console.log(result);
+            //Redirect to Home
+            router.push('/landing');
           }
         }
       
