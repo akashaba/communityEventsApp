@@ -11,7 +11,7 @@ import React from "react";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCuENtwntgNaBVSToaJhIcE_U_umqSVZNY",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "project2025-2d4b5.firebaseapp.com",
   projectId: "project2025-2d4b5",
   storageBucket: "project2025-2d4b5.firebasestorage.app",

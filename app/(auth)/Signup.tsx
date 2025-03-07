@@ -36,7 +36,7 @@ export default function Signup() {
             console.log(error);
           }else{
             console.log(response?.url);
-            const result = await axios.post('http://192.168.0.104:8082/user', {
+            const result = await axios.post('http://192.168.0.107:8081/user', {
               name:fullName,
               email:email,
               image: response?.url,

@@ -3,8 +3,8 @@ import { Cloudinary } from '@cloudinary/url-gen';
 
 export const cloudinary = new Cloudinary({
   cloud: {  
-    cloudName: 'dovrum3pn',
-    apiKey:'325584441366515' 
+    cloudName: process.env.CLOUDNIARY_NAME,   
+    apiKey:process.env.CLOUDINARY_API_KEY, 
 },
   url: { secure: true },        
 });
