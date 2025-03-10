@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/data/colors';
 import TextInputField from '@/Components/Shared/TextInputField';
@@ -11,6 +11,7 @@ import { upload } from 'cloudinary-react-native';
 import { cloudinary, options } from '@/config/CloudinaryConfig';
 import axios from 'axios';
 import { router } from 'expo-router';
+import { AuthContext } from '@/context/AuthContext';
 
 export default function Signup() {
 
@@ -18,11 +19,14 @@ export default function Signup() {
   const [email, setEmail] = useState<string|undefined>();
   const [password, setPassword] = useState<string|undefined>();
   const [profileImage, setProfileImage] = useState<string|undefined>();
+  const[loading, setLoading] = useState<boolean>(false);
+  const {user, setUser} = useContext(AuthContext);
   const onButtonPress = () => {
     if(!fullName || !email || !password){
       ToastAndroid.show('Please fill all fields', ToastAndroid.BOTTOM);
       return;
     }
+    setLoading(true);
 
     createUserWithEmailAndPassword(auth, email, password)
     .then(async(userCredential) => {
@@ -36,14 +40,16 @@ export default function Signup() {
             console.log(error);
           }else{
             console.log(response?.url);
-            const result = await axios.post('http://192.168.0.107:8081/user', {
+            const result = await axios.post('http://192.168.0.103:8081/user', {
               name:fullName,
               email:email,
               image: response?.url,
             });
             console.log(result);
+            setUser(result?.data);
             //Redirect to Home
             router.push('/landing');
+            setLoading(false);
           }
         }
       
@@ -57,6 +63,7 @@ export default function Signup() {
       const errorMessage = error.message;
       ToastAndroid.show(errorMessage, ToastAndroid.BOTTOM);
       // ..
+      setLoading(false);
     });
 
   }
@@ -108,7 +115,7 @@ export default function Signup() {
       <TextInputField label='Password' password={true} onChangeText={(v)=> setPassword(v)}/>
 
 
-        <Button text='Create Account' onPress={onButtonPress}/>
+        <Button text='Create Account' onPress={onButtonPress} loading={loading}/>
     </View>
   )
 }
