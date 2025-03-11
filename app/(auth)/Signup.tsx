@@ -54,15 +54,11 @@ export default function Signup() {
         }
       
       })
-
-      // Add User to Database
-      
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       ToastAndroid.show(errorMessage, ToastAndroid.BOTTOM);
-      // ..
       setLoading(false);
     });
 
